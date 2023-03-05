@@ -15,10 +15,8 @@
   display: block;
   width: 50%;
 }
+
 .invoice_item {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr) 100px 50px;
-  gap: 1em;
   margin-bottom: 0.5em;
 }
 .invoice_itemlist {
@@ -28,11 +26,19 @@
   display: grid;
   margin-bottom: 2em;
 }
-.cal{
+.cal {
   grid-column: 3;
 }
 .seal {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2em;
+}
+@media (min-width: 60rem) {
+  .invoice_item {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) 100px 50px;
+    gap: 1em;
+    margin-bottom: 0.5em;
+  }
 }
