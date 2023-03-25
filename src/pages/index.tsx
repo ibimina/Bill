@@ -14,7 +14,7 @@ export default function Home() {
   const removeItem = (e: React.MouseEvent, item:Item) => {
     e.preventDefault()
     let subtotal = invoice.subtotal - item.Amount
-    let vat = subtotal * invoice.tax.taxrate
+    let vat = subtotal * invoice?.tax?.taxrate
     let total = subtotal + vat
    
     setInvoice({ ...invoice,subtotal,vat,total, itemlist: invoice.itemlist.filter((item) => item.description !== item.description) })
