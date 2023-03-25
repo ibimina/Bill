@@ -17,16 +17,16 @@ export const Invoice = {
     subtotal: 0,
     tax: {
         tax_description: "",
-    taxrate: 0
-} as Tax,
-    vat:0,
-    total:0,
+        taxrate: 0
+    } as Tax,
+    vat: 0,
+    total: 0,
     Terms: "",
     signature: {
-        lastModified  :  0,
-name:"",
-size:0,
-type:"",
-webkitRelativePath:""
-}
+        lastModified: 0,
+        name: "",
+        size: 0,
+        type: "",
+        webkitRelativePath: ""
+    }
 }
