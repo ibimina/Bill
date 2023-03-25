@@ -1,37 +1,52 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import { useState } from 'react'
 import { Invoice } from '@/input/Input'
-import { Invoicee } from '@/models/invoice'
+import { useRouter } from 'next/router'
+import { Item } from '@/models/invoice'
 
 
-const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
+  const [invoice, setInvoice] = useState(Invoice)
+  const router = useRouter()
 
-  const [invoice, setInvoice] = useState<Invoicee>(Invoice)
-  const removeItem = (e: React.MouseEvent, desc: string) => {
+  const removeItem = (e: React.MouseEvent, item:Item) => {
     e.preventDefault()
-    setInvoice({ ...invoice, itemlist: invoice.itemlist.filter((item) => item.description !== desc) })
+    let subtotal = invoice.subtotal - item.Amount
+    let vat = subtotal * invoice.tax.taxrate
+    let total = subtotal + vat
+   
+    setInvoice({ ...invoice,subtotal,vat,total, itemlist: invoice.itemlist.filter((item) => item.description !== item.description) })
   }
   function handleForm(e: React.FormEvent) {
     e.preventDefault()
-    let form = e.target as HTMLFormElement
-    let formData = new FormData(form)
-    let data = Object.fromEntries(formData.entries())
-console.log(data,invoice)
-
+    localStorage.setItem("invoice", JSON.stringify(invoice))
+    router.push("/invoice")
   }
+
   const saveItem = (e: React.MouseEvent) => {
     e.preventDefault()
-    let item = e.target as HTMLButtonElement
-    let val = item.parentElement?.parentElement?.querySelectorAll('input')!
+    let val = document.querySelectorAll('.item_input')! as NodeListOf<HTMLInputElement>
     let data = Object.fromEntries(Array.from(val).map((item) =>
       item.type === 'number' ? [item.name, +item.value] : [item.name, item.value]))
+    let Amount = data.quantity * data.unit
+    let newItem = {
+      ...data, Amount
+    }
+    let subtotal = invoice.itemlist.reduce((acc, curr) => acc + curr.Amount, 0) + newItem.Amount
+    let vat = subtotal * invoice.tax.taxrate
+    let total = subtotal + vat
+    setInvoice((prevInvoice) => {
+      if (invoice.tax.taxrate) {
+        return { ...prevInvoice, subtotal, vat, total, itemlist: [...invoice.itemlist, newItem] }
 
-    setInvoice({ ...invoice, itemlist: [...invoice.itemlist, data] })
-    val.forEach((item) => item.value = "")
+      } else {
+        return { ...prevInvoice, subtotal, total, itemlist: [...invoice.itemlist, newItem] }
+
+      }
+    })
+    console.log(invoice, newItem, data, vat, total, data.quantity, subtotal, invoice.tax.taxrate)
   }
   return (
     <>
@@ -43,78 +58,171 @@ console.log(data,invoice)
       </Head>
 
       <form className={styles.form} onSubmit={handleForm}>
-        <section className={styles.invoice}>
-          <div className={styles.address}>
-            <textarea name="from" cols={30} rows={10} placeholder={'Your Company or Name\nAddress'} value={invoice.from} onChange={(e) => {
-              setInvoice({ ...invoice, from: e.target.value })
-            }
-            }></textarea>
-            <textarea name="billto" cols={30} rows={10} placeholder="Your customer's billing address" value={invoice.billto} onChange={(e) => {
-              setInvoice({ ...invoice, billto: e.target.value })
-            }
-            }></textarea>
-          </div>
-          <div className={styles.invoice_info}>
-            <input type="file" name="logo"  onChange={(e)=>{
-              setInvoice({ ...invoice, logo: e.target.files![0] })
-            }
-              }/>
-              
-            <input type="text" name='Invoice' placeholder='Invoice number' value={invoice.Invoice} onChange={(e) => {
-              setInvoice({ ...invoice, Invoice: e.target.value })
-            }
-            } />
-            <input type='text' name='po' placeholder="Purchase Order" value={invoice.po} onChange={(e) => {
-              setInvoice({ ...invoice, po: e.target.value })
-            }
-            } />
-            <input type="date" name="date" value={invoice.date} onChange={(e) => {
-              setInvoice({ ...invoice, date: e.target.value })
-            }
-            } />
-          </div>
-        </section>
-        {invoice.itemlist.map((item, index) => (
-          <div key={item.description}>
-            <p>{item.description}</p>
-            <button onClick={(e) => removeItem(e, item.description)}>remove</button>
-          </div>
-        )
-        )}
-        <section className={`${styles.invoice_itemlist} inv`}>
-          <section className={styles.invoice_item}>
-            <input type='text' name="description" placeholder="Description" />
-            <input type='number' name='unit' placeholder="0.0" className={styles.num} />
-            <input type='number' name='quantity' placeholder="Qunatity" className={styles.num} />
-            <input type='number' name='Amount' placeholder="0.0" className={styles.num} />
-            <div>
-              <button onClick={saveItem}>save item</button>
-              <button onClick={saveItem}>Add tax</button>
+        <div className={styles.formwrapper}>
+          <section className={styles.invoice}>
+            <div className={styles.address}>
+              <label className={styles.label}><div className={styles.flex}>  <Image src='/assets/person.png' width={30} height={35} alt='person' />
+                <span className={styles.capitalize}>From</span></div>
+                <textarea name="from" cols={30} rows={10} placeholder={'Your Company or Name\nAddress'} value={invoice.from}
+                  onChange={(e) => {
+                    setInvoice({ ...invoice, from: e.target.value })
+                  }} required></textarea>
+              </label>
+              <label className={styles.label}>
+                <div className={styles.flex}>  <Image src='/assets/people.png' width={35} height={35} alt='a group ofpeople' />
+                  <span className={styles.capitalize}>Bill to</span></div>
+                <textarea name="billto" cols={30} rows={10} placeholder="Your customer's billing address" value={invoice.billto} onChange={(e) => {
+                  setInvoice({ ...invoice, billto: e.target.value })
+                }} required></textarea>
+              </label>
+
+            </div>
+            <div className={styles.invoice_info}>
+              <label className={styles.logo_wrap}>
+                <div>
+                  <Image className={styles.bri} src='/assets/upload.png' width={50} height={100} alt='upload' />
+                  <span className={styles.capitalize}> upload logo</span>
+                </div>
+                <input type="file" name="logo"
+                  className={styles.logo_input}
+                  onChange={(e) => {
+                    setInvoice({ ...invoice, logo: e.target.files![0] })
+                  }} />
+              </label>
+
+              <label className={styles.label}>
+                <span className={styles.capitalize}>invoice #</span>
+                <input type="text" name='Invoice' placeholder='Invoice number'
+                  className={styles.input}
+                  value={invoice.invoicenum} onChange={(e) => {
+                    setInvoice({ ...invoice, invoicenum: e.target.value })
+                  }} required />
+              </label>
+              <label className={styles.label}>
+                <span className={styles.capitalize}>po</span>
+                <input type='text'
+                  className={styles.input}
+                  name='po' placeholder="Purchase Order" value={invoice.po} onChange={(e) => {
+                    setInvoice({ ...invoice, po: e.target.value })
+                  }
+                  } />
+              </label>
+              <label className={styles.label}>
+                <span className={styles.capitalize}>invoice date</span>
+                <input type="date"
+                  className={styles.input}
+                  name="date" value={invoice.date} onChange={(e) => {
+                    setInvoice({ ...invoice, date: e.target.value })
+                  }} required />
+              </label>
             </div>
           </section>
-        </section>
-        <div className={styles.calwrap}>
-          <div className={styles.cal}>
-            <p>Subtotal</p>
-            <p>vat</p>
-            <p>GrandTotal</p>
+
+          {invoice?.itemlist.length > 0 && <table className={styles.table}>
+            <thead>
+              <tr>
+                <td className={styles.td}>SNO</td>
+                <td>Description</td>
+                <td>Quantity</td>
+                <td>Unit price</td>
+                <td>Amount</td>
+              </tr>
+            </thead>
+            <tbody>
+              {invoice?.itemlist?.map((item, index) => (
+                <tr key={index}>
+                  <td className={styles.td}>{index + 1}</td>
+                  <td className={styles.td}>{item.description}</td>
+                  <td className={styles.td} >{item.quantity}</td>
+                  <td className={styles.td}>{item.unit}</td>
+                  <td className={styles.td}>{item.Amount}
+                    <button onClick={(e) => removeItem(e, item)}
+                      className={styles.remove}
+                      aria-label="remove item" ></button>
+                  </td>
+                </tr>
+              )
+              )}
+            </tbody>
+          </table>}
+
+          <section className={`${styles.invoice_itemlist}`}>
+            <input type='text' name="description" className={`${styles.input} item_input`} placeholder="Description" required />
+            <input type='number' name='quantity' placeholder="Quantity" className={`${styles.input} item_input`} required />
+            <input type='number' name='unit' placeholder="0.0" required className={`${styles.input} item_input`} />
+            <div>
+              <button onClick={saveItem} className={`${styles.btn} ${styles.add}`}>save item</button>
+
+            </div>
+          </section>
+          <div className={`${styles.tax} tax`}>
+            <input type='text' name="tax_description" placeholder="Tax Description" />
+            <input type='number' name='taxrate' placeholder="0.0" className={styles.num} />
+            <button onClick={(e) => {
+              e.preventDefault()
+              let div = document.querySelector('.tax')! as HTMLDivElement
+              let val = div.querySelectorAll('input')!
+              let tax = Object.fromEntries(Array.from(val).map((item) => {
+                return item.type === 'number' ? [item.name, +item.value] : [item.name, item.value]
+              }))
+              let vat = invoice.subtotal * tax.taxrate
+              let total = invoice.subtotal + vat
+              setInvoice({ ...invoice, tax, total, vat })
+              console.log(invoice, tax, vat)
+              div.style.display = 'none'
+            }}
+            >save tax</button>
+            <button onClick={() => {
+              let tax = document.querySelector('.tax')! as HTMLDivElement
+              tax.style.display = 'none'
+            }}>close</button>
+
           </div>
+          <div className={styles.calwrap}>
+            <p className={styles.col_one}>
+              <span className={styles.amount}> Subtotal :</span>
+              <span className={styles.num}>{invoice.subtotal}</span>
+            </p>
+            {invoice.tax.tax_description &&
+              <p className={styles.col_two}> <span className={styles.amount}>{invoice.tax.tax_description}:</span>
+                <span className={styles.num} >{invoice.vat}</span>
+              </p>}
+            <p className={styles.col_three}>
+              <span className={styles.amount}>Total :</span>
+              <span className={styles.num} >{invoice.total}</span>
+            </p>
+
+          </div>
+          <button
+            className={styles.addtax}
+            onClick={(e) => {
+              e.preventDefault()
+              let tax = document.querySelector('.tax')! as HTMLDivElement
+              tax.style.display = 'block'
+            }}>Add tax</button>
+          <section className={styles.invoice}>
+            <label>
+              <div className={styles.flex}> <Image src='/assets/write.png' width={30} height={10} alt='upload' />
+                <span>Terms & Conditions</span></div>
+              <textarea name="Terms" cols={20} rows={10} placeholder="optional" value={invoice.Terms} onChange={(e) => {
+                setInvoice({ ...invoice, Terms: e.target.value })
+              }
+              }></textarea>
+            </label>
+            <label className={styles.sign} >
+              <div >              <span>Add your signature</span> <Image src='/assets/signature.png' width={50} height={20} alt='signature' />
+              </div>
+              <input type="file" name="signature"
+                className={styles.logo_input}
+                onChange={(e) => {
+                  setInvoice({ ...invoice, signature: e.target.files![0] })
+                }} />
+            </label>
+          </section>
+
         </div>
-        <button>Generate</button>
-        <section className={styles.seal}>
-          <textarea name="Terms" cols={30} rows={10} placeholder="optional" value={invoice.Terms} onChange={(e) => {
-            setInvoice({ ...invoice, Terms: e.target.value })
-          }
-          }></textarea>
-          <input type="file" name="signature"   onChange={(e) => {
-            setInvoice({ ...invoice, signature : e.target.files![0]  })
-          }} />
-        </section>
+        <button className={`${styles.btn} ${styles.save}`}>Generate Invoice</button>
       </form>
-      <div>
-
-
-      </div>
     </>
   )
 }
