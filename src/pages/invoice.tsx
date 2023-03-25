@@ -14,7 +14,7 @@ const Invoice = () => {
         console.log(invoiceInfo, storage)
         setSender(invoiceInfo?.from.split("\n"))
         setAddress(invoiceInfo?.billto.split("\n"))
-    }, [])
+    }, [invoiceInfo])
     console.log(invoiceInfo)
 
 
