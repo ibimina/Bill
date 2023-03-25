@@ -1,25 +1,29 @@
+import { Item, Tax } from "@/models/invoice";
+
 export const Invoice = {
     from: "",
     billto: "",
     logo: {
         lastModified: 0,
-        lastModifiedDate: 0,
         name: "",
         size: 0,
         type: "",
         webkitRelativePath: ""
     },
-    Invoice: "",
+    invoicenum: "",
     po: "",
     date: "",
-    itemlist: [],
+    itemlist: [] as Item[],
     subtotal: 0,
-    vat: 0,
-    grandtotal: 0,
+    tax: {
+        tax_description: "",
+    taxrate: 0
+} as Tax,
+    vat:0,
+    total:0,
     Terms: "",
     signature: {
         lastModified  :  0,
-lastModifiedDate  : 0,
 name:"",
 size:0,
 type:"",
