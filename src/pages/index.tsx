@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '@/styles/Home.module.css'
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { Invoice } from '@/input/Input'
 import { useRouter } from 'next/router'
 import { Item } from '@/models/invoice'
@@ -10,17 +10,16 @@ import { Item } from '@/models/invoice'
 export default function Home() {
   const [invoice, setInvoice] = useState(Invoice)
   const router = useRouter()
-
-  const removeItem = (e: React.MouseEvent, item:Item) => {
+  const removeItem = (e: React.MouseEvent, item: Item) => {
     e.preventDefault()
     let subtotal = invoice.subtotal - item.Amount
     let vat = subtotal * invoice?.tax?.taxrate
     let total = subtotal + vat
-   
-    setInvoice({ ...invoice,subtotal,vat,total, itemlist: invoice.itemlist.filter((item) => item.description !== item.description) })
+    setInvoice({ ...invoice, subtotal, vat, total, itemlist: invoice.itemlist.filter((item) => item.description !== item.description) })
   }
-  function handleForm(e: React.FormEvent) {
+  function handleForm(e: FormEvent) {
     e.preventDefault()
+    console.log("p", e, invoice, 'p')
     localStorage.setItem("invoice", JSON.stringify(invoice))
     router.push("/invoice")
   }
@@ -40,13 +39,32 @@ export default function Home() {
     setInvoice((prevInvoice) => {
       if (invoice.tax.taxrate) {
         return { ...prevInvoice, subtotal, vat, total, itemlist: [...invoice.itemlist, newItem] }
-
       } else {
         return { ...prevInvoice, subtotal, total, itemlist: [...invoice.itemlist, newItem] }
-
       }
     })
-    console.log(invoice, newItem, data, vat, total, data.quantity, subtotal, invoice.tax.taxrate)
+  }
+  const addTax = (e: React.MouseEvent) => {
+    e.preventDefault()
+    let div = document.querySelector('.tax')! as HTMLDivElement
+    let val = div.querySelectorAll('input')!
+    let tax = Object.fromEntries(Array.from(val).map((item) => {
+      return item.type === 'number' ? [item.name, +item.value] : [item.name, item.value]
+    }))
+    let vat = invoice.subtotal * tax.taxrate
+    let total = invoice.subtotal + vat
+    setInvoice({ ...invoice, tax, total, vat })
+    val.forEach(val=>val.value="")
+    div.style.transform = `translateX(100000%)`
+  }
+  const handleTaxModal = (e: React.MouseEvent) => {
+    e.preventDefault()
+    let tax = document.querySelector('.tax')! as HTMLDivElement
+    if (tax.style.transform === `translateX(0%)`) {
+      tax.style.transform = `translateX(1000%)`
+    } else {
+      tax.style.transform = `translateX(0%)`
+    }
   }
   return (
     <>
@@ -57,7 +75,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <form className={styles.form} onSubmit={handleForm}>
+      <form className={styles.form}
+        onSubmit={handleForm}
+      >
         <div className={styles.formwrapper}>
           <section className={styles.invoice}>
             <div className={styles.address}>
@@ -75,22 +95,25 @@ export default function Home() {
                   setInvoice({ ...invoice, billto: e.target.value })
                 }} required></textarea>
               </label>
-
             </div>
             <div className={styles.invoice_info}>
               <label className={styles.logo_wrap}>
                 <div>
-                  <Image className={styles.bri} src='/assets/upload.png' width={50} height={100} alt='upload' />
+                  <Image className={styles.bri} src='/assets/upload.png' width={50} height={50} alt='upload' />
                   <span className={styles.capitalize}> upload logo</span>
                 </div>
                 <input type="file" name="logo"
+                accept='image/*'
+                  required
                   className={styles.logo_input}
                   onChange={(e) => {
-                    setInvoice({ ...invoice, logo: e.target.files![0] })
+                    let img = e.target.files as FileList
+                    let con = URL.createObjectURL(img[0])
+                    setInvoice({ ...invoice, logo: con })
                   }} />
               </label>
-
-              <label className={styles.label}>
+              {invoice.logo && <Image src={invoice.logo} width={50} height={100} alt='upload' />
+              }   <label className={styles.label}>
                 <span className={styles.capitalize}>invoice #</span>
                 <input type="text" name='Invoice' placeholder='Invoice number'
                   className={styles.input}
@@ -122,10 +145,10 @@ export default function Home() {
             <thead>
               <tr>
                 <td className={styles.td}>SNO</td>
-                <td>Description</td>
-                <td>Quantity</td>
-                <td>Unit price</td>
-                <td>Amount</td>
+                <td className={styles.td}>Description</td>
+                <td className={styles.td}>Quantity</td>
+                <td className={styles.td}>Unit price</td>
+                <td className={styles.td}>Amount</td>
               </tr>
             </thead>
             <tbody>
@@ -152,31 +175,16 @@ export default function Home() {
             <input type='number' name='unit' placeholder="0.0" required className={`${styles.input} item_input`} />
             <div>
               <button onClick={saveItem} className={`${styles.btn} ${styles.add}`}>save item</button>
-
             </div>
           </section>
-          <div className={`${styles.tax} tax`}>
-            <input type='text' name="tax_description" placeholder="Tax Description" />
-            <input type='number' name='taxrate' placeholder="0.0" className={styles.num} />
-            <button onClick={(e) => {
-              e.preventDefault()
-              let div = document.querySelector('.tax')! as HTMLDivElement
-              let val = div.querySelectorAll('input')!
-              let tax = Object.fromEntries(Array.from(val).map((item) => {
-                return item.type === 'number' ? [item.name, +item.value] : [item.name, item.value]
-              }))
-              let vat = invoice.subtotal * tax.taxrate
-              let total = invoice.subtotal + vat
-              setInvoice({ ...invoice, tax, total, vat })
-              console.log(invoice, tax, vat)
-              div.style.display = 'none'
-            }}
-            >save tax</button>
-            <button onClick={() => {
-              let tax = document.querySelector('.tax')! as HTMLDivElement
-              tax.style.display = 'none'
-            }}>close</button>
-
+          <div className={`${styles.fixed} tax`}>
+            <div className={styles.taxwrap}>
+              <input type='text' name="tax_description" placeholder="Tax Description" />
+              <input type='number' name='taxrate' placeholder="0.0" />
+              <button onClick={addTax}
+              >save tax</button>
+              <button onClick={handleTaxModal}>close</button>
+            </div>
           </div>
           <div className={styles.calwrap}>
             <p className={styles.col_one}>
@@ -195,33 +203,35 @@ export default function Home() {
           </div>
           <button
             className={styles.addtax}
-            onClick={(e) => {
-              e.preventDefault()
-              let tax = document.querySelector('.tax')! as HTMLDivElement
-              tax.style.display = 'block'
-            }}>Add tax</button>
+            onClick={handleTaxModal}>Add tax</button>
           <section className={styles.invoice}>
             <label>
               <div className={styles.flex}> <Image src='/assets/write.png' width={30} height={10} alt='upload' />
                 <span>Terms & Conditions</span></div>
-              <textarea name="Terms" cols={20} rows={10} placeholder="optional" value={invoice.Terms} onChange={(e) => {
-                setInvoice({ ...invoice, Terms: e.target.value })
-              }
-              }></textarea>
+              <textarea name="Terms" cols={20} rows={10} placeholder="optional" value={invoice.Terms}
+                onChange={(e) => {
+                  setInvoice({ ...invoice, Terms: e.target.value })
+                }}></textarea>
             </label>
             <label className={styles.sign} >
-              <div >              <span>Add your signature</span> <Image src='/assets/signature.png' width={50} height={20} alt='signature' />
+              <div >  <span>Add your signature</span>
+                <Image src='/assets/signature.png' width={30} height={20} alt='signature' />
               </div>
               <input type="file" name="signature"
+                accept='image/*'
+                required
                 className={styles.logo_input}
                 onChange={(e) => {
-                  setInvoice({ ...invoice, signature: e.target.files![0] })
+                  let img = e.target.files as FileList
+                  let con = URL.createObjectURL(img[0])
+                  setInvoice({ ...invoice, signature: con })
                 }} />
             </label>
+            {invoice.signature && <Image src={invoice.signature} width={50} height={100} alt='upload' />
+            }
           </section>
-
         </div>
-        <button className={`${styles.btn} ${styles.save}`}>Generate Invoice</button>
+        <input type="submit" className={`${styles.btn} ${styles.save}`} value='Generate Invoice' />
       </form>
     </>
   )
