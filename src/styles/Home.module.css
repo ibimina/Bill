@@ -60,17 +60,11 @@
   font-size: 1.5em;
   font-weight: 700;
   color: hsl(240, 29%, 68%);
-  margin-right: 1.5em;
 }
 .num {
   font-size: 1.5em;
   font-weight: 700;
   color: rgb(8, 8, 108);
-}
-.calwrap {
-  display: grid;
-  grid-template-columns: repeat(2,1fr);
-  margin-bottom: 2em;
 }
 .col_one{
   grid-column: 2;
@@ -136,6 +130,34 @@
 .tax {
   display: none;
 }
+.fixed{
+  transform: translateX(1000%);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  left: 0;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 5ms ease-in-out;
+  z-index: 1000000000000000000;
+}
+.taxwrap{
+max-width: 350px;
+background-color: #fff;
+padding: 2em 1em;
+border-radius: 5px;
+width: 100%;
+}
+.taxwrap input{
+display: block;
+width: 100%; 
+margin-bottom: 1em; 
+padding: 1em;
+border-radius: 8px;
+}
 .block {
   display: block;
 }
@@ -147,11 +169,14 @@
 }
 .table{
   width: 100%;
+border-collapse: collapse;
+margin-bottom: 1em;
 }
 .td{
-  padding: 1em;
   position: relative;
   text-transform: capitalize;
+  padding: 1em 0.3em;
+  border: 1px solid;
 }
 .remove{
   position: absolute;
@@ -162,10 +187,10 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  right: 2em;
-  top: 0.5em;
-  width: 30px;
-  height: 30px;
+  right: 0.5em;
+ bottom: 0.2em;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
 }
 @media (min-width: 40rem) {
