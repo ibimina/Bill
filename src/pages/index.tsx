@@ -2,13 +2,14 @@ import Link from "next/link";
 import Image from "next/image";
 import styles from "@/styles/Index.module.css";
 import Nav from "@/components/nav";
+import Footer from "@/components/footer";
 
 
 const Index = () => {
     return (
-         
+
         <>
-          
+
             <Nav />
 
             <main className={styles.main}>
@@ -24,8 +25,8 @@ const Index = () => {
                     </p>
                     <p className={styles.text}>
                         Generate invoices in a few clicks
-                        
-                        </p>
+
+                    </p>
                     <Link href="/invoiceform" className={styles.formlink}>
                         Get Started
                     </Link>
@@ -34,7 +35,7 @@ const Index = () => {
                 <Image src="/assets/invoice.svg" alt="Invoice" width={500} height={500} />
 
             </main>
-
+            <Footer />
         </>
     );
 };
