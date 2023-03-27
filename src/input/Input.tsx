@@ -3,13 +3,7 @@ import { Item, Tax } from "@/models/invoice";
 export const Invoice = {
     from: "",
     billto: "",
-    logo: {
-        lastModified: 0,
-        name: "",
-        size: 0,
-        type: "",
-        webkitRelativePath: ""
-    },
+    logo:'',
     invoicenum: "",
     po: "",
     date: "",
@@ -22,11 +16,5 @@ export const Invoice = {
     vat: 0,
     total: 0,
     Terms: "",
-    signature: {
-        lastModified: 0,
-        name: "",
-        size: 0,
-        type: "",
-        webkitRelativePath: ""
-    }
+    signature:""
 }

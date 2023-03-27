@@ -1,7 +1,7 @@
 export interface Invoicee {
     from: string
     billto: string
-    logo: {}
+    logo:string
     invoicenum: string
     po: string
     date: string
@@ -9,7 +9,7 @@ export interface Invoicee {
     subtotal: number
     total: number
     Terms: string
-    signature: {}
+    signature: string
     tax?:Tax
     vat: number
 }
