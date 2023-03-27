@@ -32,6 +32,10 @@ export default function Home() {
   const saveItem = (e: React.MouseEvent) => {
     e.preventDefault()
     let val = document.querySelectorAll('.item_input')! as NodeListOf<HTMLInputElement>
+if(val[0].value === "" || val[1].value === "" || val[2].value === ""){
+  alert('please fill all fields')
+  return
+}
     let data = Object.fromEntries(Array.from(val).map((item) =>
       item.type === 'number' ? [item.name, +item.value] : [item.name, item.value]))
     let Amount = data.quantity * data.unit
@@ -191,10 +195,11 @@ export default function Home() {
             <div className={styles.taxwrap}>
               <input type='text' name="tax_description" placeholder="Tax Description" />
               <input type='number' name='taxrate' placeholder="0.0" />
-              <button onClick={addTax}
-              >save tax</button>
-              <button onClick={handleTaxModal}>close</button>
-            </div>
+              <div className={styles.btnwrap}>
+                <button onClick={addTax} className={`${styles.vatbtn} ${styles.savebtn}`}>save tax</button>
+                <button onClick={handleTaxModal} className={`${styles.vatbtn} ${styles.closebtn}`}>close</button>
+              </div>
+             </div>
           </div>
           <div className={styles.calwrap}>
             <p className={styles.col_one}>
