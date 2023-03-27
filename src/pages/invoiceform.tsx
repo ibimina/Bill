@@ -21,6 +21,10 @@ export default function Home() {
   }
   function handleForm(e: FormEvent) {
     e.preventDefault()
+    if(invoice.itemlist.length === 0){
+      alert('please add an item')
+      return
+    }
     localStorage.setItem("invoice", JSON.stringify(invoice))
     router.push("/invoice")
   }
@@ -44,6 +48,7 @@ export default function Home() {
         return { ...prevInvoice, subtotal, total, itemlist: [...invoice.itemlist, newItem] }
       }
     })
+    val.forEach(val => val.value = "")
   }
   const addTax = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -175,9 +180,9 @@ export default function Home() {
           </table>}
 
           <section className={`${styles.invoice_itemlist}`}>
-            <input type='text' name="description" className={`${styles.input} item_input`} placeholder="Description" required />
-            <input type='number' name='quantity' placeholder="Quantity" className={`${styles.input} item_input`} required />
-            <input type='number' name='unit' placeholder="0.0" required className={`${styles.input} item_input`} />
+            <input type='text' name="description" className={`${styles.input} item_input`} placeholder="Description" />
+            <input type='number' name='quantity' placeholder="Quantity" className={`${styles.input} item_input`}  />
+            <input type='number' name='unit' placeholder="0.0"  className={`${styles.input} item_input`} />
             <div>
               <button onClick={saveItem} className={`${styles.btn} ${styles.add}`}>save item</button>
             </div>
