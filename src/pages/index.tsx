@@ -9,9 +9,7 @@ const Index = () => {
     return (
 
         <>
-
             <Nav />
-
             <main className={styles.main}>
                 <div className={styles.hero}>
                     <p className={styles.subtitle}>
@@ -30,10 +28,8 @@ const Index = () => {
                     <Link href="/invoiceform" className={styles.formlink}>
                         Get Started
                     </Link>
-
                 </div>
                 <Image src="/assets/invoice.svg" alt="Invoice" width={500} height={500} />
-
             </main>
             <Footer />
         </>
