@@ -1,9 +1,12 @@
-
-.container{
+.template_wrapper {
     padding: 1em;
-}.address {
+    max-width: 800px;
+    margin: 3em auto 0;
+}
+
+.address {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
 }
 
 .sender {
@@ -16,20 +19,38 @@
 
 .uppercase {
     text-transform: uppercase;
+    margin-bottom: 1em;
+    color: rgb(25, 25, 108);
+    font-family: 'Roboto', sans-serif;
+    font-size: 34px;
+}
+
+.bill {
+    text-transform: uppercase;
+    margin-bottom: 0.2em;
+    color: rgb(25, 25, 108);
+    font-size:18px;
+}
+
+.bill_address {
+    line-height: 1.2em;
+    font-weight: 500;
 }
 
 .semi {
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .font_mid {
     font-size: 14px;
+    text-transform: uppercase;
 }
 
 .flex {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    line-height: 1.5em;
 }
 
 .table {
@@ -43,7 +64,6 @@
     border-bottom: 2px solid red;
     text-transform: uppercase;
     font-size: 10px;
-
 }
 
 .bold {
@@ -53,7 +73,7 @@
 }
 
 .padding {
-    padding: 0.5em 0;
+    padding: 1em 0;
 }
 
 .end {
@@ -71,4 +91,32 @@
 .sign {
     margin-top: 2em;
     margin-left: 85%;
+}
+
+.btn {
+    display: block;
+    margin: 1em 0;
+    padding: 1em;
+    border: none;
+    cursor: pointer;
+    margin-top: 2em;
+    margin-left: auto;
+    background-color: rgb(198, 191, 193);
+}
+
+.btn:hover {
+    background-color: #e42d2d;
+    color: #fff;
+}
+.btn:focus {
+    outline: none;
+}
+.terms {
+    margin-bottom: 0.5em;
+}
+
+@media (min-width:40rem) {
+    .head {
+        font-size: unset;
+    }
 }

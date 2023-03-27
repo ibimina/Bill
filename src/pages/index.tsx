@@ -12,8 +12,11 @@ const Index = () => {
             <Nav />
             <main className={styles.main}>
                 <div className={styles.hero}>
+                    <h1 className={styles.title}>
+                      Invoice Generator simple and easy to use 
+                    </h1>
                     <p className={styles.subtitle}>
-                        <span className={styles.highlight}>Free</span> Invoice Generator
+                        <span className={styles.highlight}>Free</span> downloable Invoice 
                     </p>
                     <p className={styles.subtitle}>
                         <span className={styles.highlight}>No</span> registration required
@@ -23,7 +26,6 @@ const Index = () => {
                     </p>
                     <p className={styles.text}>
                         Generate invoices in a few clicks
-
                     </p>
                     <Link href="/invoiceform" className={styles.formlink}>
                         Get Started

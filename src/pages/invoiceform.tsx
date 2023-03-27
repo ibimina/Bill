@@ -21,6 +21,10 @@ export default function Home() {
   }
   function handleForm(e: FormEvent) {
     e.preventDefault()
+    if(invoice.itemlist.length === 0){
+      alert('please add an item')
+      return
+    }
     localStorage.setItem("invoice", JSON.stringify(invoice))
     router.push("/invoice")
   }
@@ -28,6 +32,10 @@ export default function Home() {
   const saveItem = (e: React.MouseEvent) => {
     e.preventDefault()
     let val = document.querySelectorAll('.item_input')! as NodeListOf<HTMLInputElement>
+if(val[0].value === "" || val[1].value === "" || val[2].value === ""){
+  alert('please fill all fields')
+  return
+}
     let data = Object.fromEntries(Array.from(val).map((item) =>
       item.type === 'number' ? [item.name, +item.value] : [item.name, item.value]))
     let Amount = data.quantity * data.unit
@@ -44,6 +52,7 @@ export default function Home() {
         return { ...prevInvoice, subtotal, total, itemlist: [...invoice.itemlist, newItem] }
       }
     })
+    val.forEach(val => val.value = "")
   }
   const addTax = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -175,9 +184,9 @@ export default function Home() {
           </table>}
 
           <section className={`${styles.invoice_itemlist}`}>
-            <input type='text' name="description" className={`${styles.input} item_input`} placeholder="Description" required />
-            <input type='number' name='quantity' placeholder="Quantity" className={`${styles.input} item_input`} required />
-            <input type='number' name='unit' placeholder="0.0" required className={`${styles.input} item_input`} />
+            <input type='text' name="description" className={`${styles.input} item_input`} placeholder="Description" />
+            <input type='number' name='quantity' placeholder="Quantity" className={`${styles.input} item_input`}  />
+            <input type='number' name='unit' placeholder="0.0"  className={`${styles.input} item_input`} />
             <div>
               <button onClick={saveItem} className={`${styles.btn} ${styles.add}`}>save item</button>
             </div>
@@ -186,23 +195,24 @@ export default function Home() {
             <div className={styles.taxwrap}>
               <input type='text' name="tax_description" placeholder="Tax Description" />
               <input type='number' name='taxrate' placeholder="0.0" />
-              <button onClick={addTax}
-              >save tax</button>
-              <button onClick={handleTaxModal}>close</button>
-            </div>
+              <div className={styles.btnwrap}>
+                <button onClick={addTax} className={`${styles.vatbtn} ${styles.savebtn}`}>save tax</button>
+                <button onClick={handleTaxModal} className={`${styles.vatbtn} ${styles.closebtn}`}>close</button>
+              </div>
+             </div>
           </div>
           <div className={styles.calwrap}>
             <p className={styles.col_one}>
-              <span className={styles.amount}> Subtotal :</span>
-              <span className={styles.num}>{invoice.subtotal}</span>
+              <span className={styles.amount}> Subtotal : </span>
+              <span className={styles.num}>{invoice.subtotal.toLocaleString()}</span>
             </p>
             {invoice.tax.tax_description &&
               <p className={styles.col_two}> <span className={styles.amount}>{invoice.tax.tax_description}:</span>
-                <span className={styles.num} >{invoice.vat}</span>
+                <span className={styles.num} > {invoice.vat.toLocaleString()}</span>
               </p>}
             <p className={styles.col_three}>
-              <span className={styles.amount}>Total :</span>
-              <span className={styles.num} >{invoice.total}</span>
+              <span className={styles.amount}>Total : </span>
+              <span className={styles.num} >{invoice.total.toLocaleString()}</span>
             </p>
 
           </div>
