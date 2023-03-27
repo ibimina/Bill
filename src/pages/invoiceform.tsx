@@ -198,16 +198,16 @@ export default function Home() {
           </div>
           <div className={styles.calwrap}>
             <p className={styles.col_one}>
-              <span className={styles.amount}> Subtotal :</span>
-              <span className={styles.num}>{invoice.subtotal}</span>
+              <span className={styles.amount}> Subtotal : </span>
+              <span className={styles.num}>{invoice.subtotal.toLocaleString()}</span>
             </p>
             {invoice.tax.tax_description &&
               <p className={styles.col_two}> <span className={styles.amount}>{invoice.tax.tax_description}:</span>
-                <span className={styles.num} >{invoice.vat}</span>
+                <span className={styles.num} > {invoice.vat.toLocaleString()}</span>
               </p>}
             <p className={styles.col_three}>
-              <span className={styles.amount}>Total :</span>
-              <span className={styles.num} >{invoice.total}</span>
+              <span className={styles.amount}>Total : </span>
+              <span className={styles.num} >{invoice.total.toLocaleString()}</span>
             </p>
 
           </div>
