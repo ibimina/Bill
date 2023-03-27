@@ -1,0 +1,16 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em;
+}
+.flex{
+    display: flex;
+        align-items: center;
+        gap: 1em;
+}
+@media (min-width:40rem) {
+    .header {
+        padding: 2em;
+    }
+}
