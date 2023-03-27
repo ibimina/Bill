@@ -16,7 +16,7 @@ const Index = () => {
                       Invoice Generator simple and easy to use 
                     </h1>
                     <p className={styles.subtitle}>
-                        <span className={styles.highlight}>Free</span> downloable Invoice 
+                        <span className={styles.highlight}>Free</span> Invoice download
                     </p>
                     <p className={styles.subtitle}>
                         <span className={styles.highlight}>No</span> registration required

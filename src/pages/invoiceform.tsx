@@ -170,9 +170,9 @@ if(val[0].value === "" || val[1].value === "" || val[2].value === ""){
                 <tr key={index}>
                   <td className={styles.td}>{index + 1}</td>
                   <td className={styles.td}>{item.description}</td>
-                  <td className={styles.td} >{item.quantity}</td>
+                  <td className={styles.td} >{item.quantity.toLocaleString()}</td>
                   <td className={styles.td}>{item.unit}</td>
-                  <td className={styles.td}>{item.Amount}
+                  <td className={styles.td}>{item.Amount.toLocaleString()}
                     <button onClick={(e) => removeItem(e, item)}
                       className={styles.remove}
                       aria-label="remove item" ></button>
