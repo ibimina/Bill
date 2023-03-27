@@ -5,6 +5,8 @@ import { FormEvent, useState } from 'react'
 import { Invoice } from '@/input/Input'
 import { useRouter } from 'next/router'
 import { Item } from '@/models/invoice'
+import Nav from '@/components/nav'
+import Footer from '@/components/footer'
 
 
 export default function Home() {
@@ -19,7 +21,6 @@ export default function Home() {
   }
   function handleForm(e: FormEvent) {
     e.preventDefault()
-    console.log("p", e, invoice, 'p')
     localStorage.setItem("invoice", JSON.stringify(invoice))
     router.push("/invoice")
   }
@@ -54,7 +55,7 @@ export default function Home() {
     let vat = invoice.subtotal * tax.taxrate
     let total = invoice.subtotal + vat
     setInvoice({ ...invoice, tax, total, vat })
-    val.forEach(val=>val.value="")
+    val.forEach(val => val.value = "")
     div.style.transform = `translateX(100000%)`
   }
   const handleTaxModal = (e: React.MouseEvent) => {
@@ -74,7 +75,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <Nav />
       <form className={styles.form}
         onSubmit={handleForm}
       >
@@ -97,23 +98,27 @@ export default function Home() {
               </label>
             </div>
             <div className={styles.invoice_info}>
-              <label className={styles.logo_wrap}>
-                <div>
-                  <Image className={styles.bri} src='/assets/upload.png' width={50} height={50} alt='upload' />
-                  <span className={styles.capitalize}> upload logo</span>
-                </div>
-                <input type="file" name="logo"
-                accept='image/*'
-                  required
-                  className={styles.logo_input}
-                  onChange={(e) => {
-                    let img = e.target.files as FileList
-                    let con = URL.createObjectURL(img[0])
-                    setInvoice({ ...invoice, logo: con })
-                  }} />
-              </label>
-              {invoice.logo && <Image src={invoice.logo} width={50} height={100} alt='upload' />
-              }   <label className={styles.label}>
+              <div className={styles.sign_wrap}>
+                <label className={styles.logo_wrap}>
+                  <div>
+                    <Image className={styles.bri} src='/assets/upload.png' width={50} height={50} alt='upload' />
+                    <span className={styles.capitalize}> upload logo</span>
+                  </div>
+                  <input type="file" name="logo"
+                    accept='image/*'
+                    required
+                    className={styles.logo_input}
+                    onChange={(e) => {
+                      let img = e.target.files as FileList
+                      let con = URL.createObjectURL(img[0])
+                      setInvoice({ ...invoice, logo: con })
+                    }} />
+                </label>
+                {invoice.logo && <Image src={invoice.logo} width={50} height={100} alt='upload' />
+                }
+              </div>
+              
+               <label className={styles.label}>
                 <span className={styles.capitalize}>invoice #</span>
                 <input type="text" name='Invoice' placeholder='Invoice number'
                   className={styles.input}
@@ -213,26 +218,30 @@ export default function Home() {
                   setInvoice({ ...invoice, Terms: e.target.value })
                 }}></textarea>
             </label>
-            <label className={styles.sign} >
-              <div >  <span>Add your signature</span>
-                <Image src='/assets/signature.png' width={30} height={20} alt='signature' />
-              </div>
-              <input type="file" name="signature"
-                accept='image/*'
-                required
-                className={styles.logo_input}
-                onChange={(e) => {
-                  let img = e.target.files as FileList
-                  let con = URL.createObjectURL(img[0])
-                  setInvoice({ ...invoice, signature: con })
-                }} />
-            </label>
-            {invoice.signature && <Image src={invoice.signature} width={50} height={100} alt='upload' />
-            }
+            <div className={styles.sign_wrap}>
+              <label className={styles.sign} >
+                <div >  <span>Add your signature</span>
+                  <Image src='/assets/signature.png' width={30} height={20} alt='signature' />
+                </div>
+                <input type="file" name="signature"
+                  accept='image/*'
+                  required
+                  className={styles.logo_input}
+                  onChange={(e) => {
+                    let img = e.target.files as FileList
+                    let con = URL.createObjectURL(img[0])
+                    setInvoice({ ...invoice, signature: con })
+                  }} />
+              </label>
+              {invoice.signature && <Image src={invoice.signature} width={50} height={100} alt='upload' />
+              }
+            </div>
+            
           </section>
         </div>
         <input type="submit" className={`${styles.btn} ${styles.save}`} value='Generate Invoice' />
       </form>
+      <Footer/>
     </>
   )
 }

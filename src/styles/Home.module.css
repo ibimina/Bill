@@ -89,6 +89,11 @@
   grid-template-columns: 1fr 1fr;
   gap: 2em;
 }
+.sign_wrap{
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
 .sign {
   background-color: rgb(246, 237, 238);
   max-width: 150px;
