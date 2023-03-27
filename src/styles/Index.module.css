@@ -1,40 +1,56 @@
-.main{
+.main {
     padding: 1em;
 }
-.hero{
+
+.hero {
     margin-bottom: 1em;
 }
-.title{
+
+.title {
     font-size: 1.5em;
     font-weight: 700;
-    margin-bottom: 0.3em;
+    margin-bottom: 0.5em;
 }
-.highlight{
+
+.highlight {
     color: crimson;
 }
-.subtitle{
+
+.subtitle {
     font-size: 1.2em;
-    font-weight: 600;
+    font-weight: 500;
 }
-.text{
-margin: 0.5em 0 2em; 
+
+.text {
+    margin: 1em 0 0.2em;
 }
-.formlink{
+
+.formlink {
     font-size: 1.2em;
     font-weight: 400;
     margin-bottom: 0.5em;
     color: #000000;
     text-decoration: none;
     background-color: pink;
-padding:0.5em  1em;
-display: inline-block;
-border-radius: 8px;
+    padding: 0.5em 1em;
+    display: inline-block;
+    border-radius: 8px;
 }
+
 @media (min-width:40rem) {
-    .main{
+    .main {
         display: grid;
-        grid-template-columns: 40% 70%;
+        grid-template-columns: repeat(2, 1fr);
         align-items: center;
         padding: 1em 2em;
+    }
+
+    .hero,
+    .formlink {
+        margin-bottom: 0;
+    }
+
+    .text {
+        margin: 1em 0 0.2em;
     }
 }
