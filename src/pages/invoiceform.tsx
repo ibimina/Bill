@@ -5,6 +5,7 @@ import { FormEvent, useState } from 'react'
 import { Invoice } from '@/input/Input'
 import { useRouter } from 'next/router'
 import { Item } from '@/models/invoice'
+import Nav from '@/components/nav'
 
 
 export default function Home() {
@@ -54,7 +55,7 @@ export default function Home() {
     let vat = invoice.subtotal * tax.taxrate
     let total = invoice.subtotal + vat
     setInvoice({ ...invoice, tax, total, vat })
-    val.forEach(val=>val.value="")
+    val.forEach(val => val.value = "")
     div.style.transform = `translateX(100000%)`
   }
   const handleTaxModal = (e: React.MouseEvent) => {
@@ -74,7 +75,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <Nav />
       <form className={styles.form}
         onSubmit={handleForm}
       >
@@ -103,7 +104,7 @@ export default function Home() {
                   <span className={styles.capitalize}> upload logo</span>
                 </div>
                 <input type="file" name="logo"
-                accept='image/*'
+                  accept='image/*'
                   required
                   className={styles.logo_input}
                   onChange={(e) => {
