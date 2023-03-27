@@ -13,6 +13,11 @@
   width: 100%;
   padding: 1em;
   border-radius: 8px;
+  border: none;
+  outline: none;
+}
+.input:focus,.invoice textarea:focus{
+  border: 2px solid #d32d6a;
 }
 .label {
   display: block;
@@ -115,9 +120,25 @@
   color: rgb(2, 2, 2);
   background-color: rgb(246, 223, 225);
 }
+.add:hover {
+  cursor: pointer;
+  background-color: #d32d6a;
+  transition: all 0.5s ease-in-out;
+  color: #fff;
+}
+.add:focus{
+  border: 2px solid;
+}
 .save {
   color: rgb(246, 246, 246);
-  background-color: rgb(244, 117, 131);
+  background-color: #d32d6a;
+    max-width: 850px;
+ margin: 1em auto;
+}
+.save:hover{
+cursor: pointer;
+background-color: #06061e;
+transition: all 0.5s ease-in-out;
 }
 .addtax {
   padding: 1em 0.5em;
@@ -128,6 +149,11 @@
   color: #fff;
   margin: 2em 0;
   display: block;
+}
+.addtax:hover {
+  cursor: pointer;
+  background-color: #d32d6a;
+  transition: all 0.5s ease-in-out;
 }
 .sign img {
   margin: 1em auto 0;
@@ -170,7 +196,9 @@ border-radius: 8px;
   background-color: #c5e1f4;
   padding: 1em;
   border-radius: 5px;
-  margin-bottom: 2em;
+  max-width: 850px;
+  width: 100%;
+  margin: 1em auto;
 }
 .table{
   width: 100%;
