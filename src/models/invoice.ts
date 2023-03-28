@@ -14,6 +14,7 @@ export interface Invoicee {
     vat: number
 }
 export interface Item {
+    id: number
     description: string
     unit: number
     quantity: number
