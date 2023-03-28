@@ -11,13 +11,15 @@ import Footer from '@/components/footer'
 
 export default function Home() {
   const [invoice, setInvoice] = useState(Invoice)
+  const [id, setId] = useState(0)
   const router = useRouter()
   const removeItem = (e: React.MouseEvent, item: Item) => {
     e.preventDefault()
     let subtotal = invoice.subtotal - item.Amount
     let vat = subtotal * invoice?.tax?.taxrate
     let total = subtotal + vat
-    setInvoice({ ...invoice, subtotal, vat, total, itemlist: invoice.itemlist.filter((item) => item.description !== item.description) })
+    const newItems = invoice.itemlist.filter((product) => product.id !== item.id)
+    setInvoice({ ...invoice, subtotal, vat, total, itemlist: newItems })
   }
   function handleForm(e: FormEvent) {
     e.preventDefault()
@@ -40,7 +42,7 @@ if(val[0].value === "" || val[1].value === "" || val[2].value === ""){
       item.type === 'number' ? [item.name, +item.value] : [item.name, item.value]))
     let Amount = data.quantity * data.unit
     let newItem = {
-      ...data, Amount
+      ...data, id,Amount
     }
     let subtotal = invoice.itemlist.reduce((acc, curr) => acc + curr.Amount, 0) + newItem.Amount
     let vat = subtotal * invoice.tax.taxrate
@@ -53,6 +55,7 @@ if(val[0].value === "" || val[1].value === "" || val[2].value === ""){
       }
     })
     val.forEach(val => val.value = "")
+    setId(id + 1)
   }
   const addTax = (e: React.MouseEvent) => {
     e.preventDefault()
