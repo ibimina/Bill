@@ -1,18 +1,17 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import styles from '@/styles/Home.module.css'
-import { FormEvent, useState } from 'react'
+import styles from '@/styles/invoiceform.module.css'
+import { useState } from 'react'
 import { Invoice } from '@/input/Input'
-import { useRouter } from 'next/router'
 import { Item } from '@/models/invoice'
 import Nav from '@/components/nav'
 import Footer from '@/components/footer'
+import Helper from '@/utils/helper'
 
 
 export default function Home() {
   const [invoice, setInvoice] = useState(Invoice)
   const [id, setId] = useState(0)
-  const router = useRouter()
   const removeItem = (e: React.MouseEvent, item: Item) => {
     e.preventDefault()
     let subtotal = invoice.subtotal - item.Amount
@@ -21,28 +20,20 @@ export default function Home() {
     const newItems = invoice.itemlist.filter((product) => product.id !== item.id)
     setInvoice({ ...invoice, subtotal, vat, total, itemlist: newItems })
   }
-  function handleForm(e: FormEvent) {
-    e.preventDefault()
-    if(invoice.itemlist.length === 0){
-      alert('please add an item')
-      return
-    }
-    localStorage.setItem("invoice", JSON.stringify(invoice))
-    router.push("/invoice")
-  }
+  const { handleForm, handleTaxModal } = Helper()
 
   const saveItem = (e: React.MouseEvent) => {
     e.preventDefault()
     let val = document.querySelectorAll('.item_input')! as NodeListOf<HTMLInputElement>
-if(val[0].value === "" || val[1].value === "" || val[2].value === ""){
-  alert('please fill all fields')
-  return
-}
+    if (val[0].value === "" || val[1].value === "" || val[2].value === "") {
+      alert('please fill all fields')
+      return
+    }
     let data = Object.fromEntries(Array.from(val).map((item) =>
       item.type === 'number' ? [item.name, +item.value] : [item.name, item.value]))
     let Amount = data.quantity * data.unit
     let newItem = {
-      ...data, id,Amount
+      ...data, id, Amount
     }
     let subtotal = invoice.itemlist.reduce((acc, curr) => acc + curr.Amount, 0) + newItem.Amount
     let vat = subtotal * invoice.tax.taxrate
@@ -70,15 +61,6 @@ if(val[0].value === "" || val[1].value === "" || val[2].value === ""){
     val.forEach(val => val.value = "")
     div.style.transform = `translateX(100000%)`
   }
-  const handleTaxModal = (e: React.MouseEvent) => {
-    e.preventDefault()
-    let tax = document.querySelector('.tax')! as HTMLDivElement
-    if (tax.style.transform === `translateX(0%)`) {
-      tax.style.transform = `translateX(1000%)`
-    } else {
-      tax.style.transform = `translateX(0%)`
-    }
-  }
   return (
     <>
       <Head>
@@ -89,7 +71,7 @@ if(val[0].value === "" || val[1].value === "" || val[2].value === ""){
       </Head>
       <Nav />
       <form className={styles.form}
-        onSubmit={handleForm}
+        onSubmit={(e) => handleForm(e, invoice)}
       >
         <div className={styles.formwrapper}>
           <section className={styles.invoice}>
@@ -129,8 +111,8 @@ if(val[0].value === "" || val[1].value === "" || val[2].value === ""){
                 {invoice.logo && <Image src={invoice.logo} width={50} height={100} alt='upload' />
                 }
               </div>
-              
-               <label className={styles.label}>
+
+              <label className={styles.label}>
                 <span className={styles.capitalize}>invoice #</span>
                 <input type="text" name='Invoice' placeholder='Invoice number'
                   className={styles.input}
@@ -188,8 +170,8 @@ if(val[0].value === "" || val[1].value === "" || val[2].value === ""){
 
           <section className={`${styles.invoice_itemlist}`}>
             <input type='text' name="description" className={`${styles.input} item_input`} placeholder="Description" />
-            <input type='number' name='quantity' placeholder="Quantity" className={`${styles.input} item_input`}  />
-            <input type='number' name='unit' placeholder="0.0"  className={`${styles.input} item_input`} />
+            <input type='number' name='quantity' placeholder="Quantity" className={`${styles.input} item_input`} />
+            <input type='number' name='unit' placeholder="0.0" className={`${styles.input} item_input`} />
             <div>
               <button onClick={saveItem} className={`${styles.btn} ${styles.add}`}>save item</button>
             </div>
@@ -200,9 +182,9 @@ if(val[0].value === "" || val[1].value === "" || val[2].value === ""){
               <input type='number' name='taxrate' placeholder="0.0" />
               <div className={styles.btnwrap}>
                 <button onClick={addTax} className={`${styles.vatbtn} ${styles.savebtn}`}>save tax</button>
-                <button onClick={handleTaxModal} className={`${styles.vatbtn} ${styles.closebtn}`}>close</button>
+                <button onClick={(e) => handleTaxModal(e)} className={`${styles.vatbtn} ${styles.closebtn}`}>close</button>
               </div>
-             </div>
+            </div>
           </div>
           <div className={styles.calwrap}>
             <p className={styles.col_one}>
@@ -249,12 +231,12 @@ if(val[0].value === "" || val[1].value === "" || val[2].value === ""){
               {invoice.signature && <Image src={invoice.signature} width={50} height={100} alt='upload' />
               }
             </div>
-            
+
           </section>
         </div>
         <input type="submit" className={`${styles.btn} ${styles.save}`} value='Generate Invoice' />
       </form>
-      <Footer/>
+      <Footer />
     </>
   )
 }
