@@ -83,12 +83,13 @@
   font-size: 1.5em;
   font-weight: 700;
   color: rgb(8, 8, 108);
+  word-wrap: break-word;
 }
 
 .col_one {
   grid-column: 2;
   grid-row: 1;
-
+margin-bottom: 1em;
 }
 
 .col_two {
@@ -275,9 +276,7 @@
 }
 
 .table {
-  width: 100%;
   border-collapse: collapse;
-  margin-bottom: 1em;
 }
 
 .td {

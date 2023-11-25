@@ -1,4 +1,4 @@
-import { Invoicee } from "@/models/invoice"
+import { Invoicee } from "@/type/invoice"
 import { jsPDF } from "jspdf";
 import Image from "next/image"
 import { useEffect, useState } from "react"
@@ -34,8 +34,8 @@ const Invoice = () => {
 
     return (
         <>
-        <Nav/>
-        <div className={styles.template_wrapper}>
+            <Nav />
+            <div className={styles.template_wrapper}>
                 <main className={styles.container}>
                     <div className={styles.sender}>
                         <section>
@@ -111,10 +111,10 @@ const Invoice = () => {
                     </article>
                 </main>
                 <button onClick={generatePdf} className={styles.btn}>download</button>
-               
-        </div>
+
+            </div>
             <Footer />
-           </>
+        </>
     )
 }
 export default Invoice
