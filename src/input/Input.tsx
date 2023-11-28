@@ -1,9 +1,9 @@
-import { Item, Tax } from "@/models/invoice";
+import { Item, Tax } from "@/type/invoice";
 
 export const Invoice = {
     from: "",
     billto: "",
-    logo:'',
+    logo: '',
     invoicenum: "",
     po: "",
     date: "",
@@ -16,5 +16,5 @@ export const Invoice = {
     vat: 0,
     total: 0,
     Terms: "",
-    signature:""
+    signature: ""
 }

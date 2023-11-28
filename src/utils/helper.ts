@@ -1,4 +1,4 @@
-import { Invoicee } from "@/models/invoice"
+import { Invoicee } from "@/type/invoice"
 import { useRouter } from "next/router"
 import { FormEvent } from "react"
 
