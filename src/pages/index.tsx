@@ -13,7 +13,7 @@ const Index = () => {
             <main className={styles.container}>
                 <section className={styles.main}>
                     <div className={styles.hero}>
-                        <h1 className={styles.title}>
+                        <h1 data-testid="title" className={styles.title}>
                             Invoice Generator simple and easy to use
                         </h1>
                         <p className={styles.subtitle}>

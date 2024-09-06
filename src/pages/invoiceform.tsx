@@ -123,12 +123,13 @@ export default function Home() {
                 <div className={styles.flex}>
                   {" "}
                   <Image
+                  data-testid="person"
                     src="/assets/person.png"
                     width={30}
                     height={35}
                     alt="person"
                   />
-                  <span className={styles.capitalize}>From</span>
+                  <span  className={styles.capitalize}>From</span>
                 </div>
                 <textarea
                   name="from"
